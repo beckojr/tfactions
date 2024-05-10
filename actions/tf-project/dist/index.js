@@ -24961,7 +24961,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             core.info("Creating project");
-            core.debug("Setting inputs");
+            core.info("Setting inputs");
             const name = core.getInput("name");
             const desc = core.getInput("description");
             const hostname = core.getInput("hostname") || process.env.TFC_ENDPOINT;
@@ -24973,11 +24973,12 @@ function run() {
                 throw new Error("TFC_ENDPOINT is not set");
             if (!organization)
                 throw new Error("TFC_ORG is not set");
-            core.debug("Fetching project");
+            core.info("Fetching project");
             const get_res = yield fetch(`${hostname}/api/v2/organizations/${organization}/projects?filter%5Bnames%5D=${name}`, {
                 headers: (0, utils_1.tfcHeader)(token),
                 method: "GET"
             });
+            core.info(JSON.stringify(yield get_res.json()));
             if (get_res.ok) {
                 core.setOutput("project_id", (yield get_res.json()).data.id);
             }
