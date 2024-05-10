@@ -24971,7 +24971,7 @@ function run() {
                 throw new Error("TFC_ENDPOINT is not set");
             if (!organization)
                 throw new Error("TFC_ORG is not set");
-            const get_res = yield fetch(`${hostname}/api/v2/organizations/${organization}/projects?filter[names]=${name}`, {
+            const get_res = yield fetch(`${hostname}/api/v2/organizations/${organization}/projects?filter%5Bnames%5D=${name}`, {
                 headers: (0, utils_1.tfcHeader)(token),
                 method: "GET"
             });
