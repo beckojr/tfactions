@@ -1,0 +1,24 @@
+name: "Create TFC project"
+description: "Create a TFC project"
+inputs:
+  hostname:
+    description: "Base URL of Terraform Cloud/Enterprise"
+    required: true
+    default: "app.terraform.io"
+  token:
+    description: "Terraform Cloud/Enterprise API token"
+    required: true
+    default: ""
+  organization:
+    description: "Terraform Cloud/Enterprise organization"
+    required: false
+    default: ""
+  name:
+    description: "Name of the project"
+    required: true
+outputs:
+  project_id:
+    description: "ID of the project"
+runs:
+  using: "node20"
+  main: "dist/index.js"
