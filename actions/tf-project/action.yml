@@ -4,7 +4,7 @@ inputs:
   hostname:
     description: "Base URL of Terraform Cloud/Enterprise"
     required: true
-    default: "app.terraform.io"
+    default: "https://app.terraform.io"
   token:
     description: "Terraform Cloud/Enterprise API token"
     required: true
