@@ -3,6 +3,12 @@ on:
   push:
     branches:
       - dev
+  workflow_dispatch:
+    inputs:
+      name:
+        type: string
+        description: "Test projecdt"
+        default: "test-project"
 jobs:
   test:
     env:
@@ -18,7 +24,7 @@ jobs:
         id: tf-project
         uses: ./actions/tf-project
         with:
-          name: "test-project"
+          name: ${{ inputs.name != '' && inputs.name || 'test-project' }}
 
       - name: Display project id
         run: echo ${{ steps.tf-project.outputs.project_id }}
