@@ -14,6 +14,8 @@ type Project = {
 
 export async function run(): Promise<void> {
     try {
+        core.info("Creating project")
+        core.debug("Setting inputs")
         const name = core.getInput("name")
         const desc = core.getInput("description")
         const hostname = core.getInput("hostname") || process.env.TFC_ENDPOINT
@@ -24,6 +26,7 @@ export async function run(): Promise<void> {
         if (!hostname) throw new Error("TFC_ENDPOINT is not set")
         if (!organization) throw new Error("TFC_ORG is not set")
 
+        core.debug("Fetching project")
         const get_res = await fetch(`${hostname}/api/v2/organizations/${organization}/projects?filter%5Bnames%5D=${name}`, {
             headers: tfcHeader(token),
             method: "GET"
