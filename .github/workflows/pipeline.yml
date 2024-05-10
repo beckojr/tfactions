@@ -5,6 +5,10 @@ on:
       - dev
 jobs:
   test:
+    env:
+      TFC_TOKEN: ${{ secrets.TFC_TOKEN }}
+      TFC_ORG: ${{ secrets.TFC_ORG }}
+      TFC_ENDPOINT: ${{ secrets.TFC_ENDPOINT }}
     runs-on: [ubuntu-latest]
     steps:
       - name: Checkout
