@@ -24978,29 +24978,34 @@ function run() {
                 headers: (0, utils_1.tfcHeader)(token),
                 method: "GET"
             });
-            core.info(JSON.stringify(yield get_res.json()));
+            const getPayload = yield get_res.json();
             if (get_res.ok) {
-                core.setOutput("project_id", (yield get_res.json()).data.id);
+                if (getPayload.data.length > 0) {
+                    core.info("Project already exists");
+                    core.setOutput("project_id", getPayload.data[0].id);
+                    return;
+                }
             }
             else {
-                const pr = {
-                    data: {
-                        attributes: {
-                            name: name,
-                            description: desc
-                        },
-                        type: "projects"
-                    }
-                };
-                const res = yield fetch(`${hostname}/api/v2/organizations/${organization}/projects`, {
-                    method: "POST",
-                    headers: (0, utils_1.tfcHeader)(token),
-                    body: JSON.stringify(pr)
-                });
-                if (res.ok) {
-                    core.info("Project created successfully");
-                    core.setOutput("project_id", (yield res.json()).data.id);
+                core.setFailed(`Failed to fetch project: ${getPayload.errors[0].detail}`);
+            }
+            const pr = {
+                data: {
+                    attributes: {
+                        name: name,
+                        description: desc
+                    },
+                    type: "projects"
                 }
+            };
+            const res = yield fetch(`${hostname}/api/v2/organizations/${organization}/projects`, {
+                method: "POST",
+                headers: (0, utils_1.tfcHeader)(token),
+                body: JSON.stringify(pr)
+            });
+            if (res.ok) {
+                core.info("Project created successfully");
+                core.setOutput("project_id", (yield res.json()).data.id);
             }
         }
         catch (error) {

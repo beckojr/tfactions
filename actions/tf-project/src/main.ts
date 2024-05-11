@@ -31,28 +31,33 @@ export async function run(): Promise<void> {
             headers: tfcHeader(token),
             method: "GET"
         })
-        core.info(JSON.stringify(await get_res.json()))
+        const getPayload = await get_res.json()
         if (get_res.ok) {
-            core.setOutput("project_id", (await get_res.json()).data.id)
+            if (getPayload.data.length > 0) {
+                core.info("Project already exists")
+                core.setOutput("project_id", getPayload.data[0].id)
+                return
+            }
         } else {
-            const pr: Project = {
-                data: {
-                    attributes: {
-                        name: name,
-                        description: desc
-                    },
-                    type: "projects"
-                }
+            core.setFailed(`Failed to fetch project: ${getPayload.errors[0].detail}`)
+        }
+        const pr: Project = {
+            data: {
+                attributes: {
+                    name: name,
+                    description: desc
+                },
+                type: "projects"
             }
-            const res = await fetch(`${hostname}/api/v2/organizations/${organization}/projects`, {
-                method: "POST",
-                headers: tfcHeader(token),
-                body: JSON.stringify(pr)
-            })
-            if (res.ok) {
-                core.info("Project created successfully")
-                core.setOutput("project_id", (await res.json()).data.id)
-            }
+        }
+        const res = await fetch(`${hostname}/api/v2/organizations/${organization}/projects`, {
+            method: "POST",
+            headers: tfcHeader(token),
+            body: JSON.stringify(pr)
+        })
+        if (res.ok) {
+            core.info("Project created successfully")
+            core.setOutput("project_id", (await res.json()).data.id)
         }
 
     } catch (error) {
